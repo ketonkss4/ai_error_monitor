@@ -20,7 +20,6 @@ Before you begin, ensure you have the following installed:
 
 1. **Clone the repository**
 
-
 2. **Set up the backend (FastAPI)**
 
 Navigate to the backend directory and install the required Python dependencies.
@@ -66,6 +65,91 @@ yarn dev
 The Next.js application will start on `http://localhost:3000`.
 
 ## Using the Application
-
 - Navigate to `http://localhost:3000` in your browser to access the frontend UI.
 - To submit an error report, use the `/error-report` POST endpoint on the FastAPI server (`http://localhost:8000/error-report`). You can use tools like Postman or cURL for this purpose.
+
+## Submitting Error Reports Programmatically
+
+To integrate the AI Error Monitoring System into your application, wrap the code you want to monitor in a try-catch block. Save the stack trace to a text file and send the location path of that error report to the `/error-report` endpoint.
+
+### Examples
+
+#### Python
+
+```python
+import requests
+import traceback
+
+try:
+    # Your code here
+    1 / 0  # Example error
+except Exception as e:
+    error_report = traceback.format_exc()
+    with open("error_report.txt", "w") as file:
+        file.write(error_report)
+    response = requests.post("http://localhost:8000/error-report", json={"location": "error_report.txt"})
+    print(response.json())
+```
+
+#### JavaScript (Node.js)
+
+```javascript
+const fs = require('fs');
+const axios = require('axios');
+
+try {
+    // Your code here
+    throw new Error('Example error'); // Example error
+} catch (error) {
+    fs.writeFileSync('error_report.txt', error.stack);
+    axios.post('http://localhost:8000/error-report', { location: 'error_report.txt' })
+        .then(response => console.log(response.data))
+        .catch(error => console.error(error));
+}
+```
+
+#### Java
+
+```java
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.net.URI;
+
+public class ErrorReportExample {
+    public static void main(String[] args) {
+        try {
+            // Your code here
+            throw new Exception("Example error"); // Example error
+        } catch (Exception e) {
+            StringWriter sw = new StringWriter();
+            e.printStackTrace(new PrintWriter(sw));
+            String errorReport = sw.toString();
+
+            try (PrintWriter out = new PrintWriter("error_report.txt")) {
+                out.println(errorReport);
+            } catch (Exception fileException) {
+                fileException.printStackTrace();
+            }
+
+            HttpClient client = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:8000/error-report"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString("{\"location\":\"error_report.txt\"}"))
+                    .build();
+
+            try {
+                HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+                System.out.println(response.body());
+            } catch (Exception httpException) {
+                httpException.printStackTrace();
+            }
+        }
+    }
+}
+```
+
+These examples demonstrate how to catch errors, save them to a file, and then send a POST request to the `/error-report` endpoint with the location of the error report file.
