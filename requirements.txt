@@ -9,3 +9,4 @@ langgraph==0.1.5
 python-dotenv==1.0.1
 pydantic==2.5.3
 langchain-core==0.2.11
+langchain_experimental==0.0.62

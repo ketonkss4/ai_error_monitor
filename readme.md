@@ -1,6 +1,9 @@
 # AI Error Monitoring System
 
-The AI Error Monitoring System is designed to receive error reports when a program crashes and return recommendations to fix the error. This project is split into two main components: a FastAPI backend that handles error report submissions and a Next.js frontend for the user interface.
+The AI Error Monitoring System is designed to receive error reports when a program crashes and return recommendations to fix the error. 
+The system will receive error reports from its /error-report POST endpoint upon which it will show error received to the frontend-ui chat window interface. Then the error will be processed and a message from the AI system will show in the chat window with the explanation for the error along with the proposed plan for the solution. The chat bubble will have button options to accept the solution, provide feedback, or ignore. 
+
+This project is split into two main components: a FastAPI backend that handles error report submissions and a Next.js frontend for the user interface.
 
 ## Getting Started
 
