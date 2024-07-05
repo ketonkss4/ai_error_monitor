@@ -15,6 +15,7 @@ Before you begin, ensure you have the following installed:
 - Python 3.8 or higher
 - Node.js 12.x or higher
 - npm or yarn
+- ANTHROPIC_API_KEY and OPENAI_API_KEY API in .env folder
 
 ### Installation
 
